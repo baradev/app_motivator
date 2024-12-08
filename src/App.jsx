@@ -11,23 +11,22 @@ import {
   Grid,
   Divider,
 } from '@aws-amplify/ui-react'
-import { Amplify } from 'aws-amplify'
 import '@aws-amplify/ui-react/styles.css'
 import { getUrl } from 'aws-amplify/storage'
 import { uploadData } from 'aws-amplify/storage'
 import { generateClient } from 'aws-amplify/data'
-import outputs from '../amplify_outputs.json'
+import { useNavigate } from 'react-router-dom'
+
 /**
  * @type {import('aws-amplify/data').Client<import('../amplify/data/resource').Schema>}
  */
-
-Amplify.configure(outputs)
 const client = generateClient({
   authMode: 'userPool',
 })
 
 export default function App() {
   const [items, setItems] = useState([])
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetchItems()
@@ -176,6 +175,7 @@ export default function App() {
             ))}
           </Grid>
           <Button onClick={signOut}>Sign Out</Button>
+          <Button onClick={() => navigate('/')}>Back to Intro</Button>
         </Flex>
       )}
     </Authenticator>
