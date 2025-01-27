@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Authenticator,
   Button,
@@ -8,8 +8,6 @@ import {
   Flex,
   View,
   Image,
-  Grid,
-  Divider,
 } from '@aws-amplify/ui-react'
 import '@aws-amplify/ui-react/styles.css'
 import { getUrl } from 'aws-amplify/storage'
@@ -17,9 +15,6 @@ import { uploadData } from 'aws-amplify/storage'
 import { generateClient } from 'aws-amplify/data'
 import { useNavigate } from 'react-router-dom'
 
-/**
- * @type {import('aws-amplify/data').Client<import('../amplify/data/resource').Schema>}
- */
 const client = generateClient({
   authMode: 'userPool',
 })
@@ -88,95 +83,48 @@ export default function App() {
   return (
     <Authenticator>
       {({ signOut }) => (
-        <Flex
-          className="App"
-          justifyContent="center"
-          alignItems="center"
-          direction="column"
-          width="70%"
-          margin="0 auto"
-        >
+        <View className="App">
           <Heading level={1}>My Bucket List</Heading>
-          <View as="form" margin="3rem 0" onSubmit={createItem}>
-            <Flex
-              direction="column"
-              justifyContent="center"
-              gap="2rem"
-              padding="2rem"
-            >
-              <TextField
-                name="title"
-                placeholder="Bucket List Item"
-                label="Bucket List Item"
-                labelHidden
-                variation="quiet"
-                required
-              />
-              <TextField
-                name="description"
-                placeholder="Description"
-                label="Description"
-                labelHidden
-                variation="quiet"
-                required
-              />
-              <View
-                name="image"
-                as="input"
-                type="file"
-                alignSelf={'end'}
-                accept="image/png, image/jpeg"
-              />
-
-              <Button type="submit" variation="primary">
-                Add to Bucket List
-              </Button>
-            </Flex>
+          <View as="form" className="form-container" onSubmit={createItem}>
+            <TextField
+              name="title"
+              placeholder="Bucket List Item"
+              label="Bucket List Item"
+              required
+            />
+            <TextField
+              name="description"
+              placeholder="Description"
+              label="Description"
+              required
+            />
+            <View
+              name="image"
+              as="input"
+              type="file"
+              accept="image/png, image/jpeg"
+            />
+            <Button type="submit">Add to Bucket List</Button>
           </View>
-          <Divider />
+          <View className="divider" />
           <Heading level={2}>My Bucket List Items</Heading>
-          <Grid
-            margin="3rem 0"
-            autoFlow="column"
-            justifyContent="center"
-            gap="2rem"
-            alignContent="center"
-          >
+          <View className="grid-container">
             {items.map((item) => (
-              <Flex
-                key={item.id || item.title}
-                direction="column"
-                justifyContent="center"
-                alignItems="center"
-                gap="2rem"
-                border="1px solid #ccc"
-                padding="2rem"
-                borderRadius="5%"
-                className="box"
-              >
-                <View>
-                  <Heading level="3">{item.title}</Heading>
-                </View>
-                <Text fontStyle="italic">{item.description}</Text>
+              <View key={item.id || item.title} className="box">
+                <Heading level={3}>{item.title}</Heading>
+                <Text>{item.description}</Text>
                 {item.image && (
-                  <Image
-                    src={item.image}
-                    alt={`Visual for ${item.title}`}
-                    style={{ width: 400 }}
-                  />
+                  <Image src={item.image} alt={`Visual for ${item.title}`} />
                 )}
-                <Button
-                  variation="destructive"
-                  onClick={() => deleteItem(item)}
-                >
-                  Delete Item
-                </Button>
-              </Flex>
+                <Button onClick={() => deleteItem(item)}>Delete Item</Button>
+              </View>
             ))}
-          </Grid>
-          <Button onClick={signOut}>Sign Out</Button>
-          <Button onClick={() => navigate('/')}>Back to Intro</Button>
-        </Flex>
+          </View>
+          <Flex justifyContent="space-between" marginTop="2rem">
+            <Button onClick={signOut}>Sign Out</Button>
+            <Button onClick={() => navigate('/')}>Back to Intro</Button>
+          </Flex>
+        </View>
       )}
     </Authenticator>
   )
