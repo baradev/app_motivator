@@ -8,6 +8,7 @@ import {
   Flex,
   View,
   Image,
+  Loader,
 } from '@aws-amplify/ui-react'
 import '@aws-amplify/ui-react/styles.css'
 import { getUrl } from 'aws-amplify/storage'
@@ -21,6 +22,8 @@ const client = generateClient({
 
 export default function App() {
   const [items, setItems] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [deletingItemId, setDeletingItemId] = useState(null)
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -47,37 +50,44 @@ export default function App() {
 
   async function createItem(event) {
     event.preventDefault()
+    setIsLoading(true)
     const form = new FormData(event.target)
-    console.log(form.get('image').name)
 
-    const { data: newItem } = await client.models.BucketItem.create({
-      title: form.get('title'),
-      description: form.get('description'),
-      image: form.get('image').name,
-    })
+    try {
+      const { data: newItem } = await client.models.BucketItem.create({
+        title: form.get('title'),
+        description: form.get('description'),
+        image: form.get('image').name,
+      })
 
-    console.log(newItem)
-    if (newItem.image)
-      await uploadData({
-        path: ({ identityId }) => `media/${identityId}/${newItem.image}`,
-        data: form.get('image'),
-      }).result
+      console.log(newItem)
+      if (newItem.image) {
+        await uploadData({
+          path: ({ identityId }) => `media/${identityId}/${newItem.image}`,
+          data: form.get('image'),
+        }).result
+      }
 
-    fetchItems()
-    event.target.reset()
+      await fetchItems()
+      event.target.reset()
+    } catch (error) {
+      console.error('Error creating item:', error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   async function deleteItem({ id }) {
-    const toBeDeletedItem = {
-      id: id,
+    setDeletingItemId(id)
+    try {
+      const toBeDeletedItem = { id: id }
+      await client.models.BucketItem.delete(toBeDeletedItem)
+      await fetchItems()
+    } catch (error) {
+      console.error('Error deleting item:', error)
+    } finally {
+      setDeletingItemId(null)
     }
-
-    const { data: deletedItem } = await client.models.BucketItem.delete(
-      toBeDeletedItem
-    )
-    console.log(deletedItem)
-
-    fetchItems()
   }
 
   return (
@@ -104,7 +114,10 @@ export default function App() {
               type="file"
               accept="image/png, image/jpeg"
             />
-            <Button type="submit">Add to Bucket List</Button>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? 'Adding...' : 'Add to Bucket List'}
+            </Button>
+            {isLoading && <Loader variation="linear" />}
           </View>
           <View className="divider" />
           <Heading level={2}>My Bucket List Items</Heading>
@@ -116,7 +129,12 @@ export default function App() {
                 {item.image && (
                   <Image src={item.image} alt={`Visual for ${item.title}`} />
                 )}
-                <Button onClick={() => deleteItem(item)}>Delete Item</Button>
+                <Button
+                  onClick={() => deleteItem(item)}
+                  disabled={deletingItemId === item.id}
+                >
+                  {deletingItemId === item.id ? 'Deleting...' : 'Delete Item'}
+                </Button>
               </View>
             ))}
           </View>
