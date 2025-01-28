@@ -23,9 +23,10 @@ const client = generateClient({
 })
 
 function AppContent({ signOut }) {
-  const { tokens } = useTheme() // Add this line to access theme tokens
+  const { tokens } = useTheme()
   const [items, setItems] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingGoals, setIsLoadingGoals] = useState(true)
   const [deletingItemId, setDeletingItemId] = useState(null)
   const navigate = useNavigate()
 
@@ -34,21 +35,26 @@ function AppContent({ signOut }) {
   }, [])
 
   async function fetchItems() {
-    const { data: items } = await client.models.BucketItem.list()
-    await Promise.all(
-      items.map(async (item) => {
-        if (item.image) {
-          const linkToStorageFile = await getUrl({
-            path: ({ identityId }) => `media/${identityId}/${item.image}`,
-          })
-          console.log(linkToStorageFile.url)
-          item.image = linkToStorageFile.url
-        }
-        return item
-      })
-    )
-    console.log(items)
-    setItems(items)
+    setIsLoadingGoals(true)
+    try {
+      const { data: items } = await client.models.BucketItem.list()
+      await Promise.all(
+        items.map(async (item) => {
+          if (item.image) {
+            const linkToStorageFile = await getUrl({
+              path: ({ identityId }) => `media/${identityId}/${item.image}`,
+            })
+            item.image = linkToStorageFile.url
+          }
+          return item
+        })
+      )
+      setItems(items)
+    } catch (error) {
+      console.error('Error fetching items:', error)
+    } finally {
+      setIsLoadingGoals(false)
+    }
   }
 
   async function createItem(event) {
@@ -63,7 +69,6 @@ function AppContent({ signOut }) {
         image: form.get('image').name,
       })
 
-      console.log(newItem)
       if (newItem.image) {
         await uploadData({
           path: ({ identityId }) => `media/${identityId}/${newItem.image}`,
@@ -124,24 +129,31 @@ function AppContent({ signOut }) {
         {isLoading && <Loader variation="linear" />}
       </View>
       <View className="divider" />
-      <Heading level={2}>My Goal List Items</Heading>
-      <View className="grid-container">
-        {items.map((item) => (
-          <View key={item.id || item.title} className="box">
-            <Heading level={3}>{item.title}</Heading>
-            <Text>{item.description}</Text>
-            {item.image && (
-              <Image src={item.image} alt={`Visual for ${item.title}`} />
-            )}
-            <Button
-              onClick={() => deleteItem(item)}
-              disabled={deletingItemId === item.id}
-            >
-              {deletingItemId === item.id ? 'Deleting...' : 'Delete Item'}
-            </Button>
-          </View>
-        ))}
-      </View>
+      <Heading level={2}>My Bucket List Items</Heading>
+      {isLoadingGoals ? (
+        <Flex direction="column" alignItems="center">
+          <Loader size="large" />
+          <Text>Loading your goals...</Text>
+        </Flex>
+      ) : (
+        <View className="grid-container">
+          {items.map((item) => (
+            <View key={item.id || item.title} className="box">
+              <Heading level={3}>{item.title}</Heading>
+              <Text>{item.description}</Text>
+              {item.image && (
+                <Image src={item.image} alt={`Visual for ${item.title}`} />
+              )}
+              <Button
+                onClick={() => deleteItem(item)}
+                disabled={deletingItemId === item.id}
+              >
+                {deletingItemId === item.id ? 'Deleting...' : 'Delete Item'}
+              </Button>
+            </View>
+          ))}
+        </View>
+      )}
       <Flex justifyContent="space-between" marginTop="2rem">
         <Button
           onClick={() => {
