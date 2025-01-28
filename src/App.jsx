@@ -23,6 +23,7 @@ const client = generateClient({
 })
 
 function AppContent({ signOut }) {
+  const { tokens } = useTheme() // Add this line to access theme tokens
   const [items, setItems] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [deletingItemId, setDeletingItemId] = useState(null)
@@ -94,12 +95,12 @@ function AppContent({ signOut }) {
 
   return (
     <View className="App">
-      <Heading level={1}>My Bucket List</Heading>
+      <Heading level={1}>My Goal List</Heading>
       <View as="form" className="form-container" onSubmit={createItem}>
         <TextField
           name="title"
-          placeholder="Bucket List Item"
-          label="Bucket List Item"
+          placeholder="Goal List Item"
+          label="Goal List Item"
           required
         />
         <TextField
@@ -108,19 +109,22 @@ function AppContent({ signOut }) {
           label="Description"
           required
         />
-        <View
-          name="image"
-          as="input"
-          type="file"
-          accept="image/png, image/jpeg"
-        />
+        <Flex direction="column">
+          <Text style={{ color: '#304050' }}>Upload Image (optional)</Text>
+          <View
+            name="image"
+            as="input"
+            type="file"
+            accept="image/png, image/jpeg"
+          />
+        </Flex>
         <Button type="submit" disabled={isLoading}>
           {isLoading ? 'Adding...' : 'Add to Bucket List'}
         </Button>
         {isLoading && <Loader variation="linear" />}
       </View>
       <View className="divider" />
-      <Heading level={2}>My Bucket List Items</Heading>
+      <Heading level={2}>My Goal List Items</Heading>
       <View className="grid-container">
         {items.map((item) => (
           <View key={item.id || item.title} className="box">
