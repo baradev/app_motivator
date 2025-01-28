@@ -9,6 +9,8 @@ import {
   View,
   Image,
   Loader,
+  ThemeProvider,
+  useTheme,
 } from '@aws-amplify/ui-react'
 import '@aws-amplify/ui-react/styles.css'
 import { getUrl } from 'aws-amplify/storage'
@@ -20,7 +22,7 @@ const client = generateClient({
   authMode: 'userPool',
 })
 
-export default function App() {
+function AppContent({ signOut }) {
   const [items, setItems] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [deletingItemId, setDeletingItemId] = useState(null)
@@ -91,65 +93,124 @@ export default function App() {
   }
 
   return (
-    <Authenticator>
-      {({ signOut }) => (
-        <View className="App">
-          <Heading level={1}>My Bucket List</Heading>
-          <View as="form" className="form-container" onSubmit={createItem}>
-            <TextField
-              name="title"
-              placeholder="Bucket List Item"
-              label="Bucket List Item"
-              required
-            />
-            <TextField
-              name="description"
-              placeholder="Description"
-              label="Description"
-              required
-            />
-            <View
-              name="image"
-              as="input"
-              type="file"
-              accept="image/png, image/jpeg"
-            />
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? 'Adding...' : 'Add to Bucket List'}
-            </Button>
-            {isLoading && <Loader variation="linear" />}
-          </View>
-          <View className="divider" />
-          <Heading level={2}>My Bucket List Items</Heading>
-          <View className="grid-container">
-            {items.map((item) => (
-              <View key={item.id || item.title} className="box">
-                <Heading level={3}>{item.title}</Heading>
-                <Text>{item.description}</Text>
-                {item.image && (
-                  <Image src={item.image} alt={`Visual for ${item.title}`} />
-                )}
-                <Button
-                  onClick={() => deleteItem(item)}
-                  disabled={deletingItemId === item.id}
-                >
-                  {deletingItemId === item.id ? 'Deleting...' : 'Delete Item'}
-                </Button>
-              </View>
-            ))}
-          </View>
-          <Flex justifyContent="space-between" marginTop="2rem">
+    <View className="App">
+      <Heading level={1}>My Bucket List</Heading>
+      <View as="form" className="form-container" onSubmit={createItem}>
+        <TextField
+          name="title"
+          placeholder="Bucket List Item"
+          label="Bucket List Item"
+          required
+        />
+        <TextField
+          name="description"
+          placeholder="Description"
+          label="Description"
+          required
+        />
+        <View
+          name="image"
+          as="input"
+          type="file"
+          accept="image/png, image/jpeg"
+        />
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? 'Adding...' : 'Add to Bucket List'}
+        </Button>
+        {isLoading && <Loader variation="linear" />}
+      </View>
+      <View className="divider" />
+      <Heading level={2}>My Bucket List Items</Heading>
+      <View className="grid-container">
+        {items.map((item) => (
+          <View key={item.id || item.title} className="box">
+            <Heading level={3}>{item.title}</Heading>
+            <Text>{item.description}</Text>
+            {item.image && (
+              <Image src={item.image} alt={`Visual for ${item.title}`} />
+            )}
             <Button
-              onClick={() => {
-                signOut()
-                navigate('/')
-              }}
+              onClick={() => deleteItem(item)}
+              disabled={deletingItemId === item.id}
             >
-              Sign Out
+              {deletingItemId === item.id ? 'Deleting...' : 'Delete Item'}
             </Button>
-          </Flex>
-        </View>
-      )}
-    </Authenticator>
+          </View>
+        ))}
+      </View>
+      <Flex justifyContent="space-between" marginTop="2rem">
+        <Button
+          onClick={() => {
+            signOut()
+            navigate('/')
+          }}
+        >
+          Sign Out
+        </Button>
+      </Flex>
+    </View>
+  )
+}
+
+export default function App() {
+  const { tokens } = useTheme()
+  const theme = {
+    name: 'Auth Example Theme',
+    tokens: {
+      colors: {
+        brand: {
+          primary: {
+            10: tokens.colors.purple[10],
+            80: tokens.colors.purple[80],
+            90: tokens.colors.purple[90],
+            100: tokens.colors.purple[100],
+          },
+        },
+      },
+      components: {
+        authenticator: {
+          router: {
+            boxShadow: `0 0 16px ${tokens.colors.overlay['10']}`,
+            borderWidth: '0',
+          },
+          form: {
+            padding: `${tokens.space.medium} ${tokens.space.xl} ${tokens.space.medium}`,
+          },
+        },
+        button: {
+          primary: {
+            backgroundColor: tokens.colors.purple[80],
+            _hover: {
+              backgroundColor: tokens.colors.purple[90],
+            },
+          },
+          link: {
+            color: tokens.colors.purple[80],
+          },
+        },
+        fieldcontrol: {
+          _focus: {
+            boxShadow: `0 0 0 2px ${tokens.colors.purple['60']}`,
+          },
+        },
+        tabs: {
+          item: {
+            color: tokens.colors.neutral['80'],
+            _active: {
+              borderColor: tokens.colors.purple[80],
+              color: tokens.colors.purple[100],
+            },
+          },
+        },
+      },
+    },
+  }
+
+  return (
+    <ThemeProvider theme={theme}>
+      <Authenticator>
+        {({ signOut }) => <AppContent signOut={signOut} />}
+      </Authenticator>
+    </ThemeProvider>
   )
 }
