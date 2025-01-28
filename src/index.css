@@ -1,10 +1,10 @@
 :root {
-  --primary-color: #3498db;
-  --secondary-color: #2ecc71;
-  --background-color: #f5f7fa;
-  --text-color: #34495e;
+  --primary-color: #8e44ad; /* Purple */
+  --secondary-color: #9b59b6; /* Lighter Purple */
+  --background-color: #f9f0ff; /* Very Light Purple */
+  --text-color: #34495e; /* Dark Blue-Gray */
   --card-background: #ffffff;
-  --shadow-color: rgba(0, 0, 0, 0.1);
+  --shadow-color: rgba(142, 68, 173, 0.1); /* Purple-tinted shadow */
 
   font-family: 'Poppins', sans-serif;
   line-height: 1.6;
@@ -68,7 +68,7 @@ input[type='text']:focus,
 input[type='file']:focus {
   border-color: var(--primary-color);
   outline: none;
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+  box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.2); /* Purple-tinted focus ring */
 }
 
 .box {
