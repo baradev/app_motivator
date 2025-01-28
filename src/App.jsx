@@ -139,8 +139,14 @@ export default function App() {
             ))}
           </View>
           <Flex justifyContent="space-between" marginTop="2rem">
-            <Button onClick={signOut}>Sign Out</Button>
-            <Button onClick={() => navigate('/')}>Back to Intro</Button>
+            <Button
+              onClick={() => {
+                signOut()
+                navigate('/')
+              }}
+            >
+              Sign Out
+            </Button>
           </Flex>
         </View>
       )}
