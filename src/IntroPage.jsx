@@ -12,10 +12,10 @@ import { Link } from 'react-router-dom'
 function IntroPageContent() {
   return (
     <View padding="3rem" textAlign="center">
-      <Heading level={1}>Welcome to My Bucket List App</Heading>
+      <Heading level={1}>Welcome to Motivator!</Heading>
       <Text margin="2rem 0">
-        This app helps you create and manage your personal bucket list. Sign in
-        to get started!
+        Log in to start creating and tracking your personal goals and bucket
+        list adventures.
       </Text>
       <Link to="/app">
         <Button variation="primary">Go to My Bucket List</Button>
