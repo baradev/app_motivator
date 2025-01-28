@@ -202,6 +202,16 @@ export default function App() {
             },
           },
         },
+        loader: {
+          strokeEmpty: { value: tokens.colors.purple[20] },
+          strokeFilled: { value: tokens.colors.purple[80] },
+          linear: {
+            width: { value: '100%' },
+            strokeWidth: { value: '0.25rem' },
+            strokeFilled: { value: tokens.colors.purple[80] },
+            strokeEmpty: { value: tokens.colors.purple[20] },
+          },
+        },
       },
     },
   }
