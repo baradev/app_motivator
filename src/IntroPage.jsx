@@ -17,7 +17,7 @@ function IntroPageContent() {
         list adventures.
       </Text>
       <Link to="/app">
-        <Button variation="primary">Go to My Bucket List</Button>
+        <Button variation="primary">Go to My Motivator</Button>
       </Link>
     </View>
   )
