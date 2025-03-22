@@ -9,15 +9,19 @@ import {
 import { Link } from 'react-router-dom'
 
 function IntroPageContent() {
+  const { tokens } = useTheme()
+
   return (
     <View padding="3rem" textAlign="center">
-      <Heading level={1}>Welcome to Motivator!</Heading>
-      <Text margin="2rem 0">
+      <Heading level={1} color="#FFFFFF">
+        Welcome to Motivator!
+      </Heading>
+      <Text margin="2rem 0" fontSize="1.5rem" color={tokens.colors.neutral[20]}>
         Log in to start creating and tracking your personal goals and bucket
         list adventures.
       </Text>
       <Link to="/app">
-        <Button variation="primary">Go to My Motivator</Button>
+        <Button variation="primary">Get started</Button>
       </Link>
     </View>
   )
@@ -37,21 +41,31 @@ export default function IntroPage() {
             100: tokens.colors.purple[100],
           },
         },
+        background: {
+          primary: 'linear-gradient(135deg, #6C63FF, #FF6CAB)',
+          card: 'rgba(255, 255, 255, 0.1)',
+        },
       },
       components: {
         button: {
           primary: {
-            backgroundColor: tokens.colors.purple[80],
+            backgroundColor: '#333333',
+            color: '#FFFFFF',
             _hover: {
-              backgroundColor: tokens.colors.purple[90],
+              backgroundColor: '#555555',
             },
+            borderRadius: '24px',
+            padding: '0.75rem 1.5rem',
           },
         },
         heading: {
-          color: tokens.colors.purple[100],
+          color: '#FFFFFF',
         },
         text: {
-          color: tokens.colors.neutral[80],
+          color: tokens.colors.neutral[20],
+        },
+        view: {
+          // Default View styles
         },
       },
     },
@@ -59,7 +73,28 @@ export default function IntroPage() {
 
   return (
     <ThemeProvider theme={theme}>
-      <IntroPageContent />
+      <View
+        height="60vh" // Reduced height to make it more landscape-like
+        minHeight="400px" // Ensure it doesn't get too small on smaller screens
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        style={{
+          backgroundImage: theme.tokens.colors.background.primary,
+          color: theme.tokens.colors.font?.primary || '#FFFFFF',
+          borderRadius: '16px',
+          overflow: 'hidden',
+        }}
+      >
+        <View
+          backgroundColor={theme.tokens.colors.background.card}
+          style={{ maxWidth: '800px', width: '90%' }}
+        >
+          <IntroPageContent
+          // Ensure it doesn't get too small on smaller screens
+          />
+        </View>
+      </View>
     </ThemeProvider>
   )
 }
