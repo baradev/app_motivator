@@ -100,7 +100,7 @@ function AppContent({ signOut }) {
 
   return (
     <View className="App">
-      <Heading level={1}>My Goal List</Heading>
+      <Heading level={1}>Motivator</Heading>
       <View as="form" className="form-container" onSubmit={createItem}>
         <TextField
           name="title"
@@ -124,12 +124,11 @@ function AppContent({ signOut }) {
           />
         </Flex>
         <Button type="submit" disabled={isLoading}>
-          {isLoading ? 'Adding...' : 'Add to Bucket List'}
+          {isLoading ? 'Adding...' : 'Add to Motivator'}
         </Button>
         {isLoading && <Loader variation="linear" />}
       </View>
       <View className="divider" />
-      <Heading level={2}>My Bucket List Items</Heading>
       {isLoadingGoals ? (
         <Flex direction="column" alignItems="center">
           <Loader size="large" />
