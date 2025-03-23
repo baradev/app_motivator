@@ -64,9 +64,7 @@ export default function IntroPage() {
         text: {
           color: tokens.colors.neutral[20],
         },
-        view: {
-          // Default View styles
-        },
+        view: {},
       },
     },
   }
@@ -74,8 +72,8 @@ export default function IntroPage() {
   return (
     <ThemeProvider theme={theme}>
       <View
-        height="60vh" // Reduced height to make it more landscape-like
-        minHeight="400px" // Ensure it doesn't get too small on smaller screens
+        height="60vh"
+        minHeight="400px"
         display="flex"
         justifyContent="center"
         alignItems="center"
@@ -90,9 +88,7 @@ export default function IntroPage() {
           backgroundColor={theme.tokens.colors.background.card}
           style={{ maxWidth: '800px', width: '90%' }}
         >
-          <IntroPageContent
-          // Ensure it doesn't get too small on smaller screens
-          />
+          <IntroPageContent />
         </View>
       </View>
     </ThemeProvider>
