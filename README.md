@@ -1,3 +1,6 @@
+![Motivator (1)](https://github.com/user-attachments/assets/28ca2b47-cb35-4a43-9bf1-fac6ee584273)
+
+
 # Motivator - Full Stack, AWS Cloud Project
 
 ## Overview
@@ -40,3 +43,10 @@ Working on this project has significantly strengthened my skills in:
 - AWS services, including Amplify, Cognito, DynamoDB, and S3.
 - Implementing CRUD operations and managing data in a NoSQL database.
 - Problem-solving and debugging in a full-stack environment.
+
+Landing Page
+![Screenshot 2025-03-23 at 9 50 46 PM](https://github.com/user-attachments/assets/a2544dc0-70db-4a3f-bfc3-92a9a46870e4)
+
+Motivator
+![Screenshot 2025-03-23 at 9 50 34 PM](https://github.com/user-attachments/assets/5728ae2a-c368-4402-8283-b0bd2e24775f)
+
